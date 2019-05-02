@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task_1</title>
+</head>
+<body>
+	<div class="form">
+		<b class="bold">
+			Исходное положение:
+		</b>
+		<input type="text" name="" id="val1" class="form_input">
+		<button class="form_button" id="searchMove">
+			Ок
+		</button>
+	</div>
+	<div class="result">
+		<div class="result_text" >
+			<p>Возможные варианта хода:</p>
+		</div>
+		<div class="result_value" id="resVal">
+		</div>
+	</div>
+	<script>
+		let globals,
+			massX = ['A', 'B', 'C', 'D', 'E', 
+			'F', 'G', 'H'],
+			massY = [1, 2, 3, 4, 5, 6, 7, 8];
+		window.onload = function () { // ждем загрузки страницы
+			searchMove.onclick = function() {
+				let arrN = val1.value.toUpperCase(); // приводим к большему регистру
+				if (arrN.length !== 2 || !(massX.indexOf(arrN[0]) + 1) || !(massY.indexOf(+arrN[1]) + 1)) 
+				return alert('Ведите координаты. ' +
+					'Первый символ - буква латинского '+
+					'алфавита от A до H, второй - число от 1 до 8'); // введенные строка должна быть строго 2 символа.
+				resVal.innerHTML = searLPos(arrN[0], +arrN[1]) +  // так как функции возвращают строку,
+					searRPos(arrN[0], +arrN[1]) + 	// то просто конкотенируем 
+					searTPos(arrN[0], +arrN[1]) + 	// возвращенные значения
+					searBPos(arrN[0], +arrN[1]);   
+			}
+		}
+		function searLPos(elemMassX, elemMassY){ // поиск координат слева от введеной клетки
+			if ((massX.indexOf(elemMassX) - 2) < 0) return '';
+			let XPosit = massX.indexOf(elemMassX) - 2, // вносим значение на 2 меньше
+				YPosit = massY.indexOf(elemMassY),
+				resultString = "",
+				TopPosit, BotPosit;
+			TopPosit = (8 > (YPosit - 1)) && ((YPosit - 1) > -1) ? massY.indexOf(elemMassY) - 1 : 0; // привсваиваем точку по оси Y
+			BotPosit = (8 > (YPosit + 1)) && ((YPosit + 1) > -1) ? massY.indexOf(elemMassY) + 1 : 0; // соответственно +-1, иначе 0
+			resultString = !TopPosit ? '' : ' '+massX[XPosit] + massY[TopPosit] + ' '; // если коордниты не входят в массив,
+			resultString += !BotPosit ? '' : ' '+massX[XPosit] + massY[BotPosit];	 // привсваиваем пустую строку 
+			return resultString;
+		}
+		function searRPos(elemMassX, elemMassY){
+			if ((massX.indexOf(elemMassX) + 2) < 0) return '';
+			let XPosit = massX.indexOf(elemMassX) + 2,
+				YPosit = massY.indexOf(elemMassY),
+				resultString = "",
+				TopPosit, BotPosit;
+			TopPosit = (8 > (YPosit - 1)) && ((YPosit - 1) > -1) ? massY.indexOf(elemMassY) - 1 : 0;
+			BotPosit = (8 > (YPosit + 1)) && ((YPosit + 1) > -1) ? massY.indexOf(elemMassY) + 1 : 0;
+			resultString = !TopPosit ? '' : ' '+massX[XPosit] + massY[TopPosit] + ' ';
+			resultString += !BotPosit ? '' : ' '+massX[XPosit] + massY[BotPosit];
+			return resultString;
+		}
+		function searTPos(elemMassX, elemMassY){
+			if ((massY.indexOf(elemMassY) + 2) < 0) return '';
+			let YPosit = massY.indexOf(elemMassY) + 2,
+				XPosit = massX.indexOf(elemMassX),
+				resultString = "",
+				LeftPosit, RightPosit;
+			LeftPosit = (8 > (XPosit - 1)) && ((XPosit - 1) > -1) ? massX.indexOf(elemMassX) - 1 : 0;
+			RightPosit = (8 > (XPosit + 1)) && ((XPosit + 1) > -1) ? massX.indexOf(elemMassX) + 1 : 0;
+			resultString = !LeftPosit ? '' : ' '+massX[LeftPosit] + massY[YPosit] + ' ';
+			resultString += !RightPosit ? '' : ' '+massX[RightPosit] + massY[YPosit];
+			return resultString;
+		}
+		function searBPos(elemMassX, elemMassY){
+			if ((massY.indexOf(elemMassY) - 2) < 0) return '';
+			let YPosit = massY.indexOf(elemMassY) - 2,
+				XPosit = massX.indexOf(elemMassX),
+				resultString = "",
+				LeftPosit, RightPosit;
+			LeftPosit = (8 > (XPosit - 1)) && ((XPosit - 1) > -1) ? massX.indexOf(elemMassX) - 1 : 0;
+			RightPosit = (8 > (XPosit + 1)) && ((XPosit + 1) > -1) ? massX.indexOf(elemMassX) + 1 : 0;
+			resultString = !LeftPosit ? '' : ' '+massX[LeftPosit] + massY[YPosit] + ' ';
+			resultString += !RightPosit ? '' : ' '+massX[RightPosit] + massY[YPosit];
+			return resultString;
+		}
+		// function searBPos(elemMassX, elemMassY, param){ //можно было использовать одну функцию с дополнительным параметом для +2 и -2, 
+		// 	if ((massY.indexOf(elemMassY) + param) < 0) return ''; // но решил, что так нагляднее
+		// 	let YPosit = massY.indexOf(elemMassY) + param,
+		// 		XPosit = massX.indexOf(elemMassX),
+		// 		resultString = "",
+		// 		LeftPosit, RightPosit;
+		// 	LeftPosit = (8 > (XPosit - 1)) && ((XPosit - 1) > -1) ? massX.indexOf(elemMassX) - 1 : 0;
+		// 	RightPosit = (8 > (XPosit + 1)) && ((XPosit + 1) > -1) ? massX.indexOf(elemMassX) + 1 : 0;
+		// 	resultString = !LeftPosit ? '' : ''+massX[LeftPosit] + massY[YPosit] + ', ';
+		// 	resultString += !RightPosit ? '' : ''+massX[RightPosit] + massY[YPosit];
+		// 	return resultString;
+		// }
+	</script>
+	<style>
+		.form {
+			display: inline-grid;
+			padding: 15px;
+			border: 1px solid black;
+		}
+		.form_button {
+			margin-top: 15px;
+			width: 70px;
+			cursor: pointer;
+		}
+	</style>
+</body>
+</html>
